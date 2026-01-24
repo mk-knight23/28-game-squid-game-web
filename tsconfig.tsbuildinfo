@@ -1,0 +1,1 @@
+{"root":["./src/main.ts","./src/vite-env.d.ts","./src/composables/useaudio.ts","./src/composables/usegameloop.ts","./src/stores/game.ts","./src/types/index.ts","./src/app.vue"],"version":"5.6.3"}

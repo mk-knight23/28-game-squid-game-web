@@ -2,29 +2,136 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  background-color: #1a1a1a;
-  color: #ffffff;
+@layer base {
+  :root {
+    --color-bg-primary: #0a0a0f;
+    --color-bg-secondary: #1a1a2e;
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #94a3b8;
+    --color-accent: #ed1b76;
+    --color-accent-secondary: #037a76;
+  }
+
+  .light {
+    --color-bg-primary: #f8fafc;
+    --color-bg-secondary: #e2e8f0;
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #64748b;
+    --color-accent: #ed1b76;
+    --color-accent-secondary: #037a76;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-squid-dark text-squid-light transition-colors duration-300;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .light body {
+    @apply bg-squid-light text-slate-900;
+  }
 }
 
-body {
-  @apply antialiased overflow-hidden select-none bg-squid-bg;
-  margin: 0;
-  height: 100vh;
+@layer components {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl;
+  }
+
+  .light .glass-panel {
+    @apply bg-slate-900/5 border-slate-200/50;
+  }
+
+  .btn-squid {
+    @apply px-8 py-4 rounded-xl font-bold uppercase tracking-wider transition-all duration-300 
+           transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-squid-dark;
+  }
+
+  .btn-squid-primary {
+    @apply btn-squid bg-squid-pink text-white hover:bg-squid-pink/90 focus:ring-squid-pink shadow-lg shadow-squid-pink/25;
+  }
+
+  .btn-squid-secondary {
+    @apply btn-squid bg-squid-cyan text-white hover:bg-squid-cyan/90 focus:ring-squid-cyan shadow-lg shadow-squid-cyan/25;
+  }
+
+  .btn-squid-outline {
+    @apply btn-squid bg-transparent border-2 border-slate-600 text-slate-300 hover:border-squid-pink hover:text-squid-pink;
+  }
+
+  .input-squid {
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl 
+           focus:outline-none focus:border-squid-pink focus:ring-2 focus:ring-squid-pink/20
+           transition-all duration-300 placeholder:text-slate-500;
+  }
+
+  .toggle-squid {
+    @apply relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300;
+  }
+
+  .toggle-squid-checked {
+    @apply bg-squid-pink;
+  }
+
+  .toggle-squid-thumb {
+    @apply inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300;
+  }
+
+  .toggle-squid-thumb-checked {
+    @apply translate-x-6;
+  }
 }
 
-.glass-panel {
-  @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl;
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 20px currentColor;
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+  }
+
+  .text-glow-pink {
+    text-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      filter: drop-shadow(0 0 5px currentColor);
+    }
+    to {
+      filter: drop-shadow(0 0 20px currentColor);
+    }
+  }
+
+  .game-grid {
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
 }
 
-.btn-squid {
-  @apply px-8 py-4 rounded-xl font-game text-[10px] uppercase transition-all active:scale-95 disabled:opacity-50;
+.font-game {
+  font-family: 'Press Start 2P', cursive;
 }
 
-.text-glow-pink {
-  text-shadow: 0 0 10px #ed1b76, 0 0 20px #ed1b76;
+canvas {
+  touch-action: none;
 }
 
-.text-glow-cyan {
-  text-shadow: 0 0 10px #037a76, 0 0 20px #037a76;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

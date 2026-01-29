@@ -287,6 +287,13 @@ If you have any questions or need help, please:
 
 ---
 
+### Live Demo
+- GitHub Pages: <https://mk-knight23.github.io/31-Squid-Game-Web/>
+- Vercel: [Deploy your own](https://vercel.com/new)
+- Netlify: [Deploy your own](https://app.netlify.com/start)
+
+---
+
 ## 📝 Design Notes (V2)
 
 ### Intentional Quirk: The Survival Streak Counter

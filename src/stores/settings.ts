@@ -13,6 +13,7 @@ export const useSettingsStore = defineStore('settings', () => {
     vibrationsEnabled: true,
     difficulty: 'normal',
     theme: 'system',
+    practiceMode: false,
   })
 
   function loadSettings(): void {
@@ -48,6 +49,16 @@ export const useSettingsStore = defineStore('settings', () => {
 
   function setDifficulty(difficulty: SettingsState['difficulty']): void {
     settings.value.difficulty = difficulty
+    saveSettings()
+  }
+
+  function togglePracticeMode(): void {
+    settings.value.practiceMode = !settings.value.practiceMode
+    saveSettings()
+  }
+
+  function setPracticeMode(value: boolean): void {
+    settings.value.practiceMode = value
     saveSettings()
   }
 
@@ -89,6 +100,8 @@ export const useSettingsStore = defineStore('settings', () => {
     toggleMusic,
     toggleVibrations,
     setDifficulty,
+    togglePracticeMode,
+    setPracticeMode,
     setTheme,
     applyTheme,
     initializeTheme,

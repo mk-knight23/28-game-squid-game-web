@@ -153,16 +153,38 @@ const winRate = computed(() => statsStore.getWinRate().toFixed(1))
                     <Smartphone :size="18" class="text-slate-400" />
                     <span class="text-white">Vibrations</span>
                   </div>
-                  <button 
+                  <button
                     @click="settingsStore.toggleVibrations()"
                     class="toggle-squid"
                     :class="settingsStore.settings.vibrationsEnabled ? 'toggle-squid-checked' : 'bg-slate-600'"
                     role="switch"
                     :aria-checked="settingsStore.settings.vibrationsEnabled"
                   >
-                    <span 
+                    <span
                       class="toggle-squid-thumb"
                       :class="settingsStore.settings.vibrationsEnabled ? 'toggle-squid-thumb-checked' : ''"
+                    ></span>
+                  </button>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <Trophy :size="18" class="text-slate-400" />
+                    <div>
+                      <span class="text-white">Practice Mode</span>
+                      <p class="text-[10px] text-slate-500 uppercase tracking-wider">No eliminations</p>
+                    </div>
+                  </div>
+                  <button
+                    @click="settingsStore.togglePracticeMode()"
+                    class="toggle-squid"
+                    :class="settingsStore.settings.practiceMode ? 'toggle-squid-checked' : 'bg-slate-600'"
+                    role="switch"
+                    :aria-checked="settingsStore.settings.practiceMode"
+                  >
+                    <span
+                      class="toggle-squid-thumb"
+                      :class="settingsStore.settings.practiceMode ? 'toggle-squid-thumb-checked' : ''"
                     ></span>
                   </button>
                 </div>
@@ -301,6 +323,10 @@ const winRate = computed(() => statsStore.getWinRate().toFixed(1))
                 <div class="flex justify-between">
                   <span class="text-slate-400">Toggle Theme</span>
                   <kbd class="px-2 py-1 bg-white/10 rounded text-white font-mono">T</kbd>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-400">Toggle Practice Mode</span>
+                  <kbd class="px-2 py-1 bg-white/10 rounded text-white font-mono">P</kbd>
                 </div>
               </div>
             </div>

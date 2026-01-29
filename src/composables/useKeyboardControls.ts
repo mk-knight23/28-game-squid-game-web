@@ -33,7 +33,7 @@ export function useKeyboardControls() {
 
   function initialize(): void {
     document.addEventListener('keydown', handleKeydown)
-    
+
     registerShortcut(KEYBOARD_SHORTCUTS.MUTE, () => {
       settingsStore.toggleSound()
     })
@@ -43,6 +43,10 @@ export function useKeyboardControls() {
       const currentIndex = themes.indexOf(settingsStore.settings.theme)
       const nextIndex = (currentIndex + 1) % themes.length
       settingsStore.setTheme(themes[nextIndex])
+    })
+
+    registerShortcut(KEYBOARD_SHORTCUTS.PRACTICE, () => {
+      settingsStore.togglePracticeMode()
     })
   }
 

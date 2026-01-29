@@ -10,10 +10,11 @@ export const useGameStore = defineStore('game', () => {
   const isEliminated = ref(false)
   const distance = ref(0)
   const dollFacingBack = ref(true)
-  const detectionStatus = ref<'green' | 'red'>('green')
+  const detectionStatus = ref<'green' | 'red' | 'yellow'>('green')
   const lives = ref(3)
   const round = ref(1)
-  
+  const countdown = ref(0) // Countdown before game starts
+
   const highScore = ref(parseInt(localStorage.getItem(STORAGE_KEYS.HIGH_SCORE) || '0'))
   
   const progress = computed(() => (distance.value / GAME_CONSTANTS.FINISH_LINE) * 100)
@@ -22,6 +23,7 @@ export const useGameStore = defineStore('game', () => {
   const isGameOver = computed(() => status.value === 'gameover')
   const isVictory = computed(() => status.value === 'victory')
   const isIdle = computed(() => status.value === 'idle')
+  const isCountingDown = computed(() => status.value === 'countdown')
   
   const formattedTime = computed(() => {
     const minutes = Math.floor(timeRemaining.value / 60)
@@ -30,7 +32,7 @@ export const useGameStore = defineStore('game', () => {
   })
 
   function startGame(): void {
-    status.value = 'playing'
+    status.value = 'countdown'
     score.value = 0
     timeRemaining.value = GAME_CONSTANTS.INITIAL_TIME
     isEliminated.value = false
@@ -38,6 +40,14 @@ export const useGameStore = defineStore('game', () => {
     lives.value = 3
     round.value = 1
     detectionStatus.value = 'green'
+    countdown.value = 3
+  }
+
+  function setCountdown(value: number): void {
+    countdown.value = value
+    if (value <= 0) {
+      status.value = 'playing'
+    }
   }
 
   function eliminate(): void {
@@ -68,7 +78,7 @@ export const useGameStore = defineStore('game', () => {
     round.value = 1
   }
 
-  function setDetectionStatus(status: 'green' | 'red'): void {
+  function setDetectionStatus(status: 'green' | 'red' | 'yellow'): void {
     detectionStatus.value = status
   }
 
@@ -105,17 +115,20 @@ export const useGameStore = defineStore('game', () => {
     detectionStatus,
     lives,
     round,
+    countdown,
     progress,
     isPlaying,
     isGameOver,
     isVictory,
     isIdle,
+    isCountingDown,
     formattedTime,
     startGame,
     eliminate,
     win,
     resetGame,
     setDetectionStatus,
+    setCountdown,
     moveForward,
     setTimeRemaining,
     setDollFacingBack,

@@ -21,4 +21,5 @@ export const KEYBOARD_SHORTCUTS = {
   SETTINGS: 'S',
   MUTE: 'M',
   THEME: 'T',
+  PRACTICE: 'P',
 } as const

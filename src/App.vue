@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useGameStore } from '@/stores/game'
 import { useSettingsStore } from '@/stores/settings'
 import { useGameLogic } from '@/composables/useGameLogic'
@@ -29,11 +29,12 @@ const showHelp = ref(false)
 
 const detectionStatus = computed(() => gameStore.detectionStatus)
 
-const backgroundClass = computed(() => 
-  detectionStatus.value === 'red' 
-    ? 'bg-red-950/30 animate-pulse' 
-    : 'bg-transparent'
-)
+const backgroundClass = computed(() => {
+  if (gameStore.isCountingDown) return 'bg-squid-pink/20'
+  if (detectionStatus.value === 'red') return 'bg-red-950/30 animate-pulse'
+  if (detectionStatus.value === 'yellow') return 'bg-yellow-950/30'
+  return 'bg-transparent'
+})
 
 onMounted(() => {
   isMobile.value = window.innerWidth < 768
@@ -42,14 +43,6 @@ onMounted(() => {
   window.addEventListener('resize', () => {
     isMobile.value = window.innerWidth < 768
   })
-})
-
-watch(() => gameStore.status, (newStatus) => {
-  if (newStatus === 'playing') {
-    gameLogic.startDetectionCycle()
-  } else {
-    gameLogic.stopGame()
-  }
 })
 
 function handleStart(): void {
@@ -103,13 +96,21 @@ const themeIcon = computed(getThemeIcon)
 
         <TresMesh :position="[0, 0, 5 - (gameStore.distance / 10)]" cast-shadow>
           <TresBoxGeometry :args="[0.5, 1.5, 0.5]" />
-          <TresMeshStandardMaterial :color="gameStore.isEliminated ? '#ef4444' : '#037a76'" />
+          <TresMeshStandardMaterial
+            :color="gameStore.isEliminated
+              ? '#ef4444'
+              : detectionStatus === 'yellow'
+                ? '#eab308'
+                : detectionStatus === 'red'
+                  ? '#dc2626'
+                  : '#037a76'"
+          />
         </TresMesh>
       </TresCanvas>
     </div>
 
     <!-- UI Overlay Layer -->
-    <div class="relative z-10 flex flex-col h-full pointer-events-none p-6 lg:p-8">
+    <div class="relative z-10 flex flex-col h-full pointer-events-none p-7 lg:p-9">
       
       <!-- HUD Top -->
       <header class="flex justify-between items-start w-full">
@@ -118,9 +119,17 @@ const themeIcon = computed(getThemeIcon)
             <span class="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.3em] lg:tracking-[0.4em] text-slate-500">
               Player 456
             </span>
-            <span class="text-lg lg:text-2xl font-game text-glow-cyan uppercase">
-              {{ gameStore.isPlaying ? 'Active' : 'Standby' }}
-            </span>
+            <div class="flex items-center gap-2">
+              <span class="text-lg lg:text-2xl font-game text-glow-cyan uppercase">
+                {{ gameStore.isPlaying || gameStore.isCountingDown ? 'Active' : 'Standby' }}
+              </span>
+              <span
+                v-if="settingsStore.settings.practiceMode"
+                class="text-[8px] lg:text-[10px] px-2 py-0.5 bg-squid-cyan/20 text-squid-cyan rounded font-bold uppercase tracking-wider"
+              >
+                Practice
+              </span>
+            </div>
           </div>
           
           <div class="h-8 lg:h-10 w-px bg-white/10"></div>
@@ -146,7 +155,7 @@ const themeIcon = computed(getThemeIcon)
           </div>
         </div>
 
-        <div class="flex flex-col items-end gap-3">
+        <div class="flex flex-col items-end gap-4">
           <div class="flex gap-2">
             <button 
               @click="toggleTheme"
@@ -180,22 +189,40 @@ const themeIcon = computed(getThemeIcon)
             </span>
           </div>
 
-          <div 
-            v-if="gameStore.isPlaying" 
+          <div
+            v-if="gameStore.isPlaying || gameStore.isCountingDown"
             class="px-6 py-2 rounded-full border-2 transition-all duration-500 font-game text-[10px] lg:text-xs"
-            :class="detectionStatus === 'red' 
-              ? 'bg-red-500 text-white border-white animate-pulse' 
-              : 'bg-green-500 text-white border-white'"
+            :class="{
+              'bg-red-500 text-white border-white animate-pulse': detectionStatus === 'red',
+              'bg-yellow-500 text-white border-white animate-pulse': detectionStatus === 'yellow',
+              'bg-green-500 text-white border-white': detectionStatus === 'green',
+              'bg-squid-pink text-white border-white': gameStore.isCountingDown
+            }"
             role="status"
-            :aria-live="detectionStatus === 'red' ? 'assertive' : 'polite'"
+            :aria-live="detectionStatus === 'red' || gameStore.isCountingDown ? 'assertive' : 'polite'"
           >
-            {{ detectionStatus === 'red' ? 'STOP!' : 'MOVE!' }}
+            {{ gameStore.isCountingDown ? `${gameStore.countdown}...` : detectionStatus === 'red' ? 'STOP!' : detectionStatus === 'yellow' ? 'READY!' : 'MOVE!' }}
           </div>
         </div>
       </header>
 
       <!-- Main Content -->
       <main class="flex-1 flex items-center justify-center">
+        <!-- Countdown Overlay -->
+        <div
+          v-if="gameStore.isCountingDown"
+          class="text-center"
+          role="status"
+          aria-live="assertive"
+        >
+          <div class="text-9xl lg:text-[12rem] font-black text-white animate-pulse">
+            {{ gameStore.countdown }}
+          </div>
+          <p class="text-xl lg:text-2xl font-bold text-squid-pink uppercase tracking-widest mt-4">
+            Get Ready
+          </p>
+        </div>
+
         <!-- Start Screen -->
         <div 
           v-if="gameStore.isIdle" 
@@ -292,7 +319,7 @@ const themeIcon = computed(getThemeIcon)
           </div>
 
           <button @click="handleReset" class="btn-squid-secondary w-full">
-            Play Again
+            Survive Again
           </button>
         </div>
       </main>
@@ -300,13 +327,14 @@ const themeIcon = computed(getThemeIcon)
       <!-- HUD Bottom -->
       <footer class="flex justify-between items-end w-full">
         <div class="flex items-center gap-4 lg:gap-6 text-[8px] lg:text-[10px] font-black uppercase tracking-[0.4em] lg:tracking-[0.5em] text-slate-500">
-          <a 
-            href="https://github.com/mk-knight23/31-Squid-Game-Web" 
-            target="_blank" 
+          <span>© 2026 Made by MK — Built by Musharraf Kazi</span>
+          <a
+            href="https://github.com/mk-knight23/31-Squid-Game-Web"
+            target="_blank"
             rel="noopener noreferrer"
             class="hover:text-white transition-colors pointer-events-auto"
           >
-            Source Control
+            GitHub
           </a>
         </div>
 

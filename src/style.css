@@ -1,121 +1,180 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    --color-bg-primary: #0a0a0f;
-    --color-bg-secondary: #1a1a2e;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #94a3b8;
-    --color-accent: #ed1b76;
-    --color-accent-secondary: #037a76;
+@theme {
+  --color-squid-pink: #ed1b76;
+  --color-squid-cyan: #037a76;
+  --color-squid-bg: #1a1a1a;
+  --color-squid-dead: #ef4444;
+  --color-squid-alive: #10b981;
+  --color-squid-dark: #0a0a0f;
+  --color-squid-light: #f8fafc;
+
+  --font-game: "Press Start 2P", system-ui;
+  --font-display: system-ui, sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-glow: glow 2s ease-in-out infinite alternate;
+  --animate-bounce-slow: bounce 3s infinite;
+
+  --shadow-glow-pink: 0 0 20px rgba(255, 0, 85, 0.5);
+  --shadow-glow-cyan: 0 0 20px rgba(0, 245, 255, 0.5);
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px #00f5ff, 0 0 10px #00f5ff;
   }
 
-  .light {
-    --color-bg-primary: #f8fafc;
-    --color-bg-secondary: #e2e8f0;
-    --color-text-primary: #0f172a;
-    --color-text-secondary: #64748b;
-    --color-accent: #ed1b76;
-    --color-accent-secondary: #037a76;
-  }
-
-  html {
-    @apply scroll-smooth;
-  }
-
-  body {
-    @apply bg-squid-dark text-squid-light transition-colors duration-300;
-    font-family: 'Inter', system-ui, sans-serif;
-  }
-
-  .light body {
-    @apply bg-squid-light text-slate-900;
+  100% {
+    box-shadow: 0 0 20px #00f5ff, 0 0 30px #00f5ff;
   }
 }
 
-@layer components {
-  .glass-panel {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl;
+:root {
+  --color-bg-primary: #0a0a0f;
+  --color-bg-secondary: #1a1a2e;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-accent: #ed1b76;
+  --color-accent-secondary: #037a76;
+}
+
+.light {
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #e2e8f0;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-accent: #ed1b76;
+  --color-accent-secondary: #037a76;
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+body {
+  @apply bg-squid-dark text-squid-light transition-colors duration-300;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.light body {
+  @apply bg-squid-light text-slate-900;
+}
+
+@utility glass-panel {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+@utility btn-squid {
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition-property: all;
+  transition-duration: 300ms;
+
+  &:hover {
+    transform: scale(1.05);
   }
 
-  .light .glass-panel {
-    @apply bg-slate-900/5 border-slate-200/50;
-  }
-
-  .btn-squid {
-    @apply px-8 py-4 rounded-xl font-bold uppercase tracking-wider transition-all duration-300 
-           transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-squid-dark;
-  }
-
-  .btn-squid-primary {
-    @apply btn-squid bg-squid-pink text-white hover:bg-squid-pink/90 focus:ring-squid-pink shadow-lg shadow-squid-pink/25;
-  }
-
-  .btn-squid-secondary {
-    @apply btn-squid bg-squid-cyan text-white hover:bg-squid-cyan/90 focus:ring-squid-cyan shadow-lg shadow-squid-cyan/25;
-  }
-
-  .btn-squid-outline {
-    @apply btn-squid bg-transparent border-2 border-slate-600 text-slate-300 hover:border-squid-pink hover:text-squid-pink;
-  }
-
-  .input-squid {
-    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl 
-           focus:outline-none focus:border-squid-pink focus:ring-2 focus:ring-squid-pink/20
-           transition-all duration-300 placeholder:text-slate-500;
-  }
-
-  .toggle-squid {
-    @apply relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300;
-  }
-
-  .toggle-squid-checked {
-    @apply bg-squid-pink;
-  }
-
-  .toggle-squid-thumb {
-    @apply inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300;
-  }
-
-  .toggle-squid-thumb-checked {
-    @apply translate-x-6;
+  &:active {
+    transform: scale(0.95);
   }
 }
 
-@layer utilities {
-  .text-glow {
-    text-shadow: 0 0 20px currentColor;
+@utility btn-squid-primary {
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  @apply bg-squid-pink text-white shadow-glow-pink;
+  transition-property: all;
+  transition-duration: 300ms;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: rgba(237, 27, 118, 0.9);
   }
 
-  .text-glow-cyan {
-    text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+@utility btn-squid-secondary {
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  @apply bg-squid-cyan text-white shadow-glow-cyan;
+  transition-property: all;
+  transition-duration: 300ms;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: rgba(3, 122, 118, 0.9);
   }
 
-  .text-glow-pink {
-    text-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+@utility btn-squid-outline {
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  @apply bg-transparent border-2 border-slate-600 text-slate-300;
+  transition-property: all;
+  transition-duration: 300ms;
+
+  &:hover {
+    transform: scale(1.05);
+    border-color: var(--color-squid-pink);
+    color: var(--color-squid-pink);
   }
 
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
+  &:active {
+    transform: scale(0.95);
   }
+}
 
-  @keyframes glow {
-    from {
-      filter: drop-shadow(0 0 5px currentColor);
-    }
-    to {
-      filter: drop-shadow(0 0 20px currentColor);
-    }
-  }
+@utility input-squid {
+  @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-squid-pink focus:ring-2 focus:ring-squid-pink/20 transition-all duration-300 placeholder:text-slate-500;
+}
 
-  .game-grid {
-    background-image: 
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-  }
+@utility text-glow {
+  text-shadow: 0 0 20px currentColor;
+}
+
+@utility text-glow-cyan {
+  text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+}
+
+@utility text-glow-pink {
+  text-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+}
+
+@utility animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@utility game-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
 .font-game {
@@ -124,14 +183,4 @@
 
 canvas {
   touch-action: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
 }

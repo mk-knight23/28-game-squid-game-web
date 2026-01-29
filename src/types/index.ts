@@ -1,5 +1,5 @@
 export interface GameState {
-  status: 'idle' | 'playing' | 'gameover' | 'victory'
+  status: 'idle' | 'countdown' | 'playing' | 'gameover' | 'victory'
   score: number
   highScore: number
   timeRemaining: number
@@ -7,9 +7,10 @@ export interface GameState {
   distance: number
   totalDistance: number
   dollFacingBack: boolean
-  detectionStatus: 'green' | 'red'
+  detectionStatus: 'green' | 'red' | 'yellow'
   lives: number
   round: number
+  countdown: number
 }
 
 export interface SettingsState {
@@ -18,6 +19,7 @@ export interface SettingsState {
   vibrationsEnabled: boolean
   difficulty: 'easy' | 'normal' | 'hard'
   theme: 'dark' | 'light' | 'system'
+  practiceMode: boolean
 }
 
 export interface StatsState {

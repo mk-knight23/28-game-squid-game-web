@@ -41,8 +41,16 @@ This project is a high-fidelity recreation of the Red Light Green Light game usi
 | **Accessibility** | None | Full ARIA + Keyboard |
 | **Persistence** | None | Settings + Stats |
 | **Settings** | None | Full settings panel |
-| **Game Modes** | 1 | 3 difficulty levels |
+| **Game Modes** | 1 | 3 difficulty levels + Practice Mode |
 | **Statistics** | None | Comprehensive stats |
+| **Game Flow** | Instant start | Countdown + Yellow warning |
+
+### New Features
+
+- **3-2-1 Countdown**: Game starts with a 3-second countdown for preparation
+- **Yellow Warning State**: Visual warning (yellow) before red light for better reaction time
+- **Practice Mode**: Toggle practice mode to play without eliminations
+- **Keyboard Shortcuts**: Press `P` to toggle practice mode instantly
 
 ## 🛠️ Tech Stack
 
@@ -106,6 +114,7 @@ VITE_APP_DESCRIPTION=Red Light Green Light Game
 | `Escape` | Reset Game |
 | `M` | Toggle Sound |
 | `T` | Toggle Theme |
+| `P` | Toggle Practice Mode |
 | `S` | Open Settings |
 
 ## 📁 Project Structure
@@ -275,3 +284,16 @@ If you have any questions or need help, please:
 <p align="center">
   Made with ❤️ by <a href="https://github.com/mk-knight23">mk-knight23</a>
 </p>
+
+---
+
+## 📝 Design Notes (V2)
+
+### Intentional Quirk: The Survival Streak Counter
+V2 adds a streak counter showing consecutive successful crossings. It serves no gameplay purpose—it's purely psychological. Humans love seeing numbers go up. The streak creates an "investment" feeling; players play longer to protect their streak. The number is meaningless, but the attachment is real.
+
+### Tradeoff: Pre-determined Timing Patterns
+The red/green timing follows predictable patterns (not pure random). This lets skilled players learn the rhythm. The tradeoff: memorization vs. reaction. Pure random feels fair but is frustrating. Pattern-based feels masterable. I chose the illusion of skill over true randomness.
+
+### What I Chose NOT to Build
+No "elimination" animation when caught. The screen simply fades to black. Graphic failure states would make the game feel punitive. The soft fade preserves dignity—you stopped, you weren't destroyed. Sometimes less drama is more respectful.

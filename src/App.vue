@@ -2,30 +2,37 @@
 import { ref, computed, onMounted } from 'vue'
 import { useGameStore } from '@/stores/game'
 import { useSettingsStore } from '@/stores/settings'
-import { useGameLogic } from '@/composables/useGameLogic'
 import { useKeyboardControls } from '@/composables/useKeyboardControls'
+import { KEYBOARD_SHORTCUTS } from '@/utils/constants'
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls, Stars, Sky } from '@tresjs/cientos'
-import { 
-  Skull, 
-  Trophy, 
+import {
+  Skull,
+  Trophy,
   Timer,
   Activity,
   Settings,
   Moon,
   Sun,
   HelpCircle,
+  Flame,
 } from 'lucide-vue-next'
 import SettingsPanel from '@/components/ui/SettingsPanel.vue'
 
 const gameStore = useGameStore()
 const settingsStore = useSettingsStore()
-const gameLogic = useGameLogic()
-useKeyboardControls()
+const { registerShortcut } = useKeyboardControls()
 
 const isMobile = ref(false)
 const showSettings = ref(false)
 const showHelp = ref(false)
+
+// V3: Register restart shortcut
+registerShortcut(KEYBOARD_SHORTCUTS.RESTART, () => {
+  if (gameStore.isPlaying || gameStore.isGameOver || gameStore.isVictory) {
+    gameStore.quickRestart()
+  }
+})
 
 const detectionStatus = computed(() => gameStore.detectionStatus)
 
@@ -39,7 +46,7 @@ const backgroundClass = computed(() => {
 onMounted(() => {
   isMobile.value = window.innerWidth < 768
   settingsStore.initializeTheme()
-  
+
   window.addEventListener('resize', () => {
     isMobile.value = window.innerWidth < 768
   })
@@ -50,7 +57,7 @@ function handleStart(): void {
 }
 
 function handleReset(): void {
-  gameLogic.reset()
+  gameStore.resetGame()
 }
 
 function toggleTheme(): void {
@@ -189,6 +196,17 @@ const themeIcon = computed(getThemeIcon)
             </span>
           </div>
 
+          <!-- V3: Win streak display -->
+          <div
+            v-if="gameStore.winStreak > 0"
+            class="glass-panel px-4 py-2 lg:px-6 lg:py-3 flex items-center gap-2 text-white"
+          >
+            <Flame :size="14" class="text-orange-500" aria-label="Win Streak" />
+            <span class="text-xs lg:text-sm font-black tracking-widest uppercase">
+              {{ gameStore.streakDisplay }}
+            </span>
+          </div>
+
           <div
             v-if="gameStore.isPlaying || gameStore.isCountingDown"
             class="px-6 py-2 rounded-full border-2 transition-all duration-500 font-game text-[10px] lg:text-xs"
@@ -257,7 +275,7 @@ const themeIcon = computed(getThemeIcon)
           </div>
 
           <p class="text-[10px] text-slate-500 uppercase tracking-wider">
-            Press Space to Start • Arrow Keys to Move
+            Space to Start • R to Quick Restart • P for Practice
           </p>
         </div>
 

@@ -25,3 +25,5 @@ dist-ssr
 
 # Backup folder (dev only)
 _backup
+.DS_Store
+src/.DS_Store

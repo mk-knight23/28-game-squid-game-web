@@ -304,3 +304,26 @@ The red/green timing follows predictable patterns (not pure random). This lets s
 
 ### What I Chose NOT to Build
 No "elimination" animation when caught. The screen simply fades to black. Graphic failure states would make the game feel punitive. The soft fade preserves dignity—you stopped, you weren't destroyed. Sometimes less drama is more respectful.
+
+## 🎉 Additional Features (V3)
+
+Three focused improvements to enhance replayability and convenience:
+
+### Per-Difficulty High Scores
+**Why added**: Previously, the game tracked a single high score regardless of difficulty. Easy mode scores couldn't compete with hard mode, making comparisons meaningless.
+
+**What changed**: Each difficulty level (Easy, Medium, Hard) now maintains its own high score. The "Best" display updates based on your current difficulty, giving you meaningful goals at each skill level.
+
+### Enhanced Win Streak
+**Why added**: The V2 streak counter mentioned in design notes was a concept. V3 implements it fully with visual feedback.
+
+**What changed**: Consecutive wins now build a streak counter displayed in the HUD with fire emojis (🔥). Streak persists across sessions via localStorage. Losing resets your streak to zero, creating stakes to protect it.
+
+### Quick Restart (R Key)
+**Why added**: After losing or winning, clicking "Try Again" requires mouse movement. For rapid practice sessions, keyboard-only is faster.
+
+**What changed**: Press `R` during gameplay or after game over to instantly restart. Works during active games if you want to bail out, and on the victory/elimination screens for quick retries.
+
+### Intentionally Rejected: Practice Mode Streaks
+I considered tracking streaks separately for Practice Mode. Rejected because practice mode is meant for learning without pressure. Tracking streaks there would make practice feel like "real" games, defeating the purpose. Practice remains stress-free.
+

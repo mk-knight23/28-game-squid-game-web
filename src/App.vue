@@ -391,3 +391,9 @@ const themeIcon = computed(getThemeIcon)
     />
   </div>
 </template>
+
+<!-- V3: Personal Best Display -->
+<div class="personal-best">
+  <span class="label">PERSONAL BEST:</span>
+  <span class="time">{{ formatTime(personalBest) }}</span>
+</div>

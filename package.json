@@ -1,8 +1,12 @@
 {
-  "name": "squid-game-web",
+  "name": "28-game-squid-net",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-knight23/28-game-squid-net.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",

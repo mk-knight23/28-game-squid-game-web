@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-squid-pink: #ed1b76;
-  --color-squid-cyan: #037a76;
-  --color-squid-bg: #1a1a1a;
-  --color-squid-dead: #ef4444;
-  --color-squid-alive: #10b981;
-  --color-squid-dark: #0a0a0f;
-  --color-squid-light: #f8fafc;
+  --color-squid-pink: #FF005A;
+  --color-squid-teal: #037A76;
+  --color-squid-yellow: #FACD5D;
+  --color-squid-dark: #0D0D0D;
+  --color-squid-light: #F2F2F2;
 
-  --font-game: "Press Start 2P", system-ui;
-  --font-display: system-ui, sans-serif;
+  --font-game: "Space Mono", monospace;
+  --font-display: "Space Mono", monospace;
   --font-sans: "Inter", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono: "Space Mono", monospace;
 
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-glow: glow 2s ease-in-out infinite alternate;
   --animate-bounce-slow: bounce 3s infinite;
+  --animate-glitch: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
 
-  --shadow-glow-pink: 0 0 20px rgba(255, 0, 85, 0.5);
-  --shadow-glow-cyan: 0 0 20px rgba(0, 245, 255, 0.5);
+  --shadow-glow-pink: 0 0 15px rgba(255, 0, 90, 0.4);
+  --shadow-glow-teal: 0 0 15px rgba(3, 122, 118, 0.4);
+  --shadow-glow-yellow: 0 0 15px rgba(250, 205, 93, 0.4);
 }
 
 @keyframes glow {
@@ -55,7 +55,7 @@ html {
 }
 
 body {
-  @apply bg-squid-dark text-squid-light transition-colors duration-300;
+  @apply bg-squid-dark text-squid-light transition-colors duration-300 antialiased selection:bg-squid-pink selection:text-white;
   font-family: 'Inter', system-ui, sans-serif;
 }
 
@@ -64,11 +64,11 @@ body {
 }
 
 @utility glass-panel {
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  background-color: rgba(13, 13, 13, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
 }
 
 @utility btn-squid {
@@ -90,97 +90,108 @@ body {
 }
 
 @utility btn-squid-primary {
-  padding: 1rem 2rem;
-  border-radius: 0.75rem;
+  padding: 1rem 2.5rem;
+  border-radius: 0px;
+  font-family: "Space Mono", monospace;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  @apply bg-squid-pink text-white shadow-glow-pink;
-  transition-property: all;
-  transition-duration: 300ms;
+  letter-spacing: 0.2em;
+  @apply bg-squid-pink text-white shadow-glow-pink border border-squid-pink/50;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    transform: scale(1.05);
-    background-color: rgba(237, 27, 118, 0.9);
+    @apply bg-white text-squid-pink border-white shadow-none;
+    transform: translateY(-2px);
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(1px);
   }
 }
 
 @utility btn-squid-secondary {
-  padding: 1rem 2rem;
-  border-radius: 0.75rem;
+  padding: 1rem 2.5rem;
+  border-radius: 0px;
+  font-family: "Space Mono", monospace;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  @apply bg-squid-cyan text-white shadow-glow-cyan;
-  transition-property: all;
-  transition-duration: 300ms;
+  letter-spacing: 0.2em;
+  @apply bg-squid-teal text-white shadow-glow-teal border border-squid-teal/50;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    transform: scale(1.05);
-    background-color: rgba(3, 122, 118, 0.9);
+    @apply bg-white text-squid-teal border-white shadow-none;
+    transform: translateY(-2px);
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(1px);
   }
 }
 
 @utility btn-squid-outline {
-  padding: 1rem 2rem;
-  border-radius: 0.75rem;
+  padding: 1rem 2.5rem;
+  border-radius: 0px;
+  font-family: "Space Mono", monospace;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  @apply bg-transparent border-2 border-slate-600 text-slate-300;
-  transition-property: all;
-  transition-duration: 300ms;
+  letter-spacing: 0.2em;
+  @apply bg-transparent border border-white/20 text-white/70;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    transform: scale(1.05);
-    border-color: var(--color-squid-pink);
-    color: var(--color-squid-pink);
+    @apply border-white text-white bg-white/5;
+    transform: translateY(-2px);
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(1px);
   }
 }
 
-@utility input-squid {
-  @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-squid-pink focus:ring-2 focus:ring-squid-pink/20 transition-all duration-300 placeholder:text-slate-500;
-}
-
-@utility text-glow {
-  text-shadow: 0 0 20px currentColor;
-}
-
-@utility text-glow-cyan {
-  text-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+@utility text-glow-teal {
+  text-shadow: 0 0 15px rgba(3, 122, 118, 0.6);
 }
 
 @utility text-glow-pink {
-  text-shadow: 0 0 20px rgba(255, 0, 85, 0.5);
+  text-shadow: 0 0 15px rgba(255, 0, 90, 0.6);
 }
 
-@utility animate-glow {
-  animation: glow 2s ease-in-out infinite alternate;
+@utility text-glow-yellow {
+  text-shadow: 0 0 15px rgba(250, 205, 93, 0.6);
 }
 
-@utility game-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
+@keyframes glitch {
+  0% {
+    transform: translate(0)
+  }
+
+  20% {
+    transform: translate(-2px, 2px)
+  }
+
+  40% {
+    transform: translate(-2px, -2px)
+  }
+
+  60% {
+    transform: translate(2px, 2px)
+  }
+
+  80% {
+    transform: translate(2px, -2px)
+  }
+
+  100% {
+    transform: translate(0)
+  }
 }
 
 .font-game {
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Space Mono', monospace;
 }
 
 canvas {
   touch-action: none;
+  filter: contrast(1.1) brightness(0.9);
 }

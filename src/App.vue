@@ -37,9 +37,9 @@ registerShortcut(KEYBOARD_SHORTCUTS.RESTART, () => {
 const detectionStatus = computed(() => gameStore.detectionStatus)
 
 const backgroundClass = computed(() => {
-  if (gameStore.isCountingDown) return 'bg-squid-pink/20'
-  if (detectionStatus.value === 'red') return 'bg-red-950/30 animate-pulse'
-  if (detectionStatus.value === 'yellow') return 'bg-yellow-950/30'
+  if (gameStore.isCountingDown) return 'bg-squid-pink/10'
+  if (detectionStatus.value === 'red') return 'bg-red-950/20'
+  if (detectionStatus.value === 'yellow') return 'bg-yellow-900/10'
   return 'bg-transparent'
 })
 
@@ -90,27 +90,30 @@ const themeIcon = computed(getThemeIcon)
         <TresPerspectiveCamera :position="[0, 5, 10]" :look-at="[0, 0, 0]" />
         <OrbitControls :enable-zoom="false" />
         
-        <Stars :radius="100" :depth="50" :count="5000" :factor="4" />
-        <Sky :distance="450000" :sun-position="[0, 1, 0]" :inclination="0" :azimuth="0.25" />
+        <Stars :radius="100" :depth="50" :count="2000" :factor="2" />
+        <Sky :distance="450000" :sun-position="[0, -1, 0]" :inclination="0.5" :azimuth="0.25" />
         
-        <TresAmbientLight :intensity="0.5" />
-        <TresDirectionalLight :position="[5, 5, 5]" :intensity="1" cast-shadow />
+        <TresAmbientLight :intensity="0.2" />
+        <TresDirectionalLight :position="[2, 5, 2]" :intensity="0.5" cast-shadow />
+        <TresSpotLight :position="[0, 10, 0]" :intensity="2" :angle="0.5" :penumbra="0.5" cast-shadow />
 
         <TresMesh :position="[0, -1, 0]" receive-shadow :rotation="[-Math.PI / 2, 0, 0]">
           <TresPlaneGeometry :args="[100, 100]" />
-          <TresMeshStandardMaterial color="#2d2d2d" :roughness="0.8" />
+          <TresMeshStandardMaterial color="#050505" :roughness="1" />
         </TresMesh>
 
         <TresMesh :position="[0, 0, 5 - (gameStore.distance / 10)]" cast-shadow>
-          <TresBoxGeometry :args="[0.5, 1.5, 0.5]" />
+          <TresCapsuleGeometry :args="[0.3, 1, 4, 8]" />
           <TresMeshStandardMaterial
             :color="gameStore.isEliminated
-              ? '#ef4444'
+              ? '#FF005A'
               : detectionStatus === 'yellow'
-                ? '#eab308'
+                ? '#FACD5D'
                 : detectionStatus === 'red'
                   ? '#dc2626'
-                  : '#037a76'"
+                  : '#037A76'"
+            :emissive="gameStore.isEliminated ? '#FF005A' : '#000'"
+            :emissiveIntensity="0.5"
           />
         </TresMesh>
       </TresCanvas>
@@ -121,52 +124,51 @@ const themeIcon = computed(getThemeIcon)
       
       <!-- HUD Top -->
       <header class="flex justify-between items-start w-full">
-        <div class="glass-panel p-4 lg:p-6 flex items-center gap-4 lg:gap-6">
+        <div class="glass-panel p-4 lg:p-6 flex items-center gap-6 border-l-4 border-l-squid-pink">
           <div class="flex flex-col">
-            <span class="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.3em] lg:tracking-[0.4em] text-slate-500">
-              Player 456
+            <span class="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-white/40">
+              OPERATIVE_456
             </span>
-            <div class="flex items-center gap-2">
-              <span class="text-lg lg:text-2xl font-game text-glow-cyan uppercase">
-                {{ gameStore.isPlaying || gameStore.isCountingDown ? 'Active' : 'Standby' }}
-              </span>
-              <span
-                v-if="settingsStore.settings.practiceMode"
-                class="text-[8px] lg:text-[10px] px-2 py-0.5 bg-squid-cyan/20 text-squid-cyan rounded font-bold uppercase tracking-wider"
-              >
-                Practice
+            <div class="flex items-center gap-3">
+              <span class="text-xl lg:text-2xl font-mono font-bold text-white uppercase tracking-tighter" :class="{ 'animate-pulse text-squid-pink': gameStore.isPlaying || gameStore.isCountingDown }">
+                {{ gameStore.isPlaying || gameStore.isCountingDown ? 'STATUS:ACTIVE' : 'STATUS:STANDBY' }}
               </span>
             </div>
           </div>
           
-          <div class="h-8 lg:h-10 w-px bg-white/10"></div>
+          <div class="h-10 w-px bg-white/10"></div>
           
+          <div class="flex flex-col">
+            <span class="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1">NETWORK_LATENCY</span>
+            <div class="flex items-center gap-2">
+              <Activity :size="14" class="text-squid-teal" />
+              <span class="font-mono text-lg font-bold text-white">42ms</span>
+            </div>
+          </div>
+
+          <div class="h-10 w-px bg-white/10"></div>
+
           <div class="flex flex-col items-center">
-            <Timer :size="14" class="lg:size-16 text-squid-pink mb-1" aria-label="Time Remaining" />
-            <span class="font-mono text-lg lg:text-xl font-black text-white">
+            <Timer :size="16" class="text-squid-pink mb-1" />
+            <span class="font-mono text-xl font-bold text-white tracking-widest">
               {{ gameStore.formattedTime }}
             </span>
           </div>
-
-          <div class="hidden lg:flex flex-col items-center ml-4">
-            <Activity :size="14" class="text-squid-cyan mb-1" aria-label="Lives" />
-            <div class="flex gap-1">
-              <span 
-                v-for="i in 3" 
-                :key="i"
-                class="w-2 h-2 rounded-full transition-colors"
-                :class="i <= gameStore.lives ? 'bg-squid-pink' : 'bg-white/20'"
-                :aria-label="`Life ${i}`"
-              ></span>
-            </div>
-          </div>
         </div>
 
+            <div 
+              v-for="i in 3" 
+              :key="i"
+              class="w-8 h-1 transition-all duration-500"
+              :class="i <= gameStore.lives ? 'bg-squid-pink shadow-[0_0_8px_rgba(255,0,90,0.6)]' : 'bg-white/10'"
+            ></div>
+          </div>
+        </div>
         <div class="flex flex-col items-end gap-4">
           <div class="flex gap-2">
             <button 
               @click="toggleTheme"
-              class="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              class="p-3 bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
               :aria-label="`Toggle theme. Current: ${settingsStore.settings.theme}`"
             >
               <component :is="themeIcon" :size="18" class="text-white" />
@@ -174,52 +176,30 @@ const themeIcon = computed(getThemeIcon)
             
             <button 
               @click="showSettings = true"
-              class="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
-              aria-label="Open settings"
+              class="p-3 bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
             >
               <Settings :size="18" class="text-white" />
             </button>
-
-            <button 
-              @click="showHelp = true"
-              class="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
-              aria-label="Open help"
-            >
-              <HelpCircle :size="18" class="text-white" />
-            </button>
           </div>
 
-          <div class="glass-panel px-4 py-2 lg:px-6 lg:py-3 flex items-center gap-3 text-white">
-            <Trophy :size="14" class="text-amber-500" aria-label="High Score" />
-            <span class="text-xs lg:text-sm font-black tracking-widest uppercase">
-              Best: {{ gameStore.highScore }}
-            </span>
-          </div>
-
-          <!-- V3: Win streak display -->
-          <div
-            v-if="gameStore.winStreak > 0"
-            class="glass-panel px-4 py-2 lg:px-6 lg:py-3 flex items-center gap-2 text-white"
-          >
-            <Flame :size="14" class="text-orange-500" aria-label="Win Streak" />
-            <span class="text-xs lg:text-sm font-black tracking-widest uppercase">
-              {{ gameStore.streakDisplay }}
+          <div class="glass-panel px-4 py-2 flex items-center gap-3 text-white border-r-4 border-r-squid-teal">
+            <Trophy :size="14" class="text-squid-yellow" />
+            <span class="text-xs font-mono font-bold tracking-[0.2em] uppercase text-white/60">
+              PB: <span class="text-white">{{ gameStore.highScore }}</span>
             </span>
           </div>
 
           <div
             v-if="gameStore.isPlaying || gameStore.isCountingDown"
-            class="px-6 py-2 rounded-full border-2 transition-all duration-500 font-game text-[10px] lg:text-xs"
+            class="px-8 py-2 border font-mono font-bold text-xs tracking-[0.3em] transition-all duration-300"
             :class="{
-              'bg-red-500 text-white border-white animate-pulse': detectionStatus === 'red',
-              'bg-yellow-500 text-white border-white animate-pulse': detectionStatus === 'yellow',
-              'bg-green-500 text-white border-white': detectionStatus === 'green',
-              'bg-squid-pink text-white border-white': gameStore.isCountingDown
+              'bg-red-600 text-white border-white animate-glitch': detectionStatus === 'red',
+              'bg-yellow-500 text-black border-yellow-400': detectionStatus === 'yellow',
+              'bg-squid-teal text-white border-white': detectionStatus === 'green',
+              'bg-squid-pink text-white border-white animate-pulse': gameStore.isCountingDown
             }"
-            role="status"
-            :aria-live="detectionStatus === 'red' || gameStore.isCountingDown ? 'assertive' : 'polite'"
           >
-            {{ gameStore.isCountingDown ? `${gameStore.countdown}...` : detectionStatus === 'red' ? 'STOP!' : detectionStatus === 'yellow' ? 'READY!' : 'MOVE!' }}
+            {{ gameStore.isCountingDown ? `INIT_SEQ_${gameStore.countdown}` : detectionStatus === 'red' ? 'EYES_ON_YOU' : detectionStatus === 'yellow' ? 'CALIBRATING' : 'PROCEED' }}
           </div>
         </div>
       </header>
@@ -233,152 +213,144 @@ const themeIcon = computed(getThemeIcon)
           role="status"
           aria-live="assertive"
         >
-          <div class="text-9xl lg:text-[12rem] font-black text-white animate-pulse">
+          <div class="text-9xl lg:text-[12rem] font-mono font-bold text-squid-pink animate-pulse">
             {{ gameStore.countdown }}
           </div>
-          <p class="text-xl lg:text-2xl font-bold text-squid-pink uppercase tracking-widest mt-4">
-            Get Ready
+          <p class="text-xl lg:text-2xl font-mono font-bold text-white uppercase tracking-widest mt-4">
+            INITIATING SEQUENCE
           </p>
         </div>
 
         <!-- Start Screen -->
         <div 
           v-if="gameStore.isIdle" 
-          class="glass-panel p-8 lg:p-12 text-center space-y-6 lg:space-y-8 pointer-events-auto max-w-md"
-          role="dialog"
-          aria-labelledby="start-title"
+          class="glass-panel p-10 lg:p-14 text-center border-t-2 border-t-squid-pink pointer-events-auto max-w-lg"
         >
-          <div class="space-y-2">
-            <h1 id="start-title" class="text-3xl lg:text-5xl font-display font-black tracking-tighter uppercase leading-none text-white">
-              Red Light <span class="text-squid-pink">Green Light</span>
+          <div class="space-y-4 mb-10">
+            <div class="inline-block px-3 py-1 bg-squid-pink text-[10px] font-mono font-bold text-white tracking-[0.5em] uppercase mb-4">
+              Authorized Personnel Only
+            </div>
+            <h1 class="text-5xl lg:text-7xl font-mono font-bold tracking-tighter uppercase leading-none text-white">
+              SQUID_<span class="text-squid-pink">NET</span>
             </h1>
-            <p class="text-xs lg:text-sm font-bold text-slate-500 uppercase tracking-[0.2em] lg:tracking-[0.3em]">
-              Squid Game Challenge
+            <p class="text-xs font-mono font-bold text-white/40 uppercase tracking-[0.4em]">
+              High-Stakes Survival Simulation
             </p>
           </div>
 
-          <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-4">
             <button 
               @click="handleStart"
-              class="btn-squid-primary"
-              autofocus
+              class="btn-squid-primary group relative overflow-hidden"
             >
-              Start Game
+              <span class="relative z-10 transition-transform group-hover:scale-110 block">INITIALIZE_SURVIVAL</span>
             </button>
             
             <button 
               @click="showSettings = true"
               class="btn-squid-outline"
             >
-              Settings
+              TERMINAL_CONFIG
             </button>
           </div>
 
-          <p class="text-[10px] text-slate-500 uppercase tracking-wider">
-            Space to Start • R to Quick Restart • P for Practice
+          <p class="text-[10px] font-mono font-bold text-white/20 uppercase tracking-[0.2em] mt-10">
+            [SPACE] INITIALIZE • [R] REBOOT • [ESC] ABORT
           </p>
         </div>
 
         <!-- Game Over Modal -->
         <div 
           v-if="gameStore.isGameOver" 
-          class="glass-panel p-8 lg:p-12 text-center space-y-6 bg-red-950/40 border-red-500/50 pointer-events-auto"
-          role="dialog"
-          aria-labelledby="gameover-title"
+          class="glass-panel p-10 lg:p-14 text-center border-t-2 border-t-red-600 bg-red-950/20 pointer-events-auto max-w-lg"
         >
-          <Skull :size="64" class="text-red-500 mx-auto animate-bounce" aria-hidden="true" />
+          <div class="inline-block px-3 py-1 bg-red-600 text-[10px] font-mono font-bold text-white tracking-[0.5em] uppercase mb-8">
+            Termination Confirmed
+          </div>
           
-          <div class="space-y-2 text-white">
-            <h2 id="gameover-title" class="text-4xl lg:text-5xl font-display font-black text-red-500 uppercase italic">
-              Eliminated
+          <div class="space-y-2 mb-10">
+            <h2 class="text-5xl lg:text-6xl font-mono font-bold text-white uppercase italic tracking-tighter">
+              ELIMINATED
             </h2>
-            <p class="text-xs font-black uppercase tracking-widest text-red-400">
-              Movement Detected!
+            <p class="text-xs font-mono font-bold uppercase tracking-[0.3em] text-red-400/60">
+              Movement Threshold Exceeded
             </p>
           </div>
 
-          <div class="grid grid-cols-2 gap-4 text-white">
-            <div class="glass-panel p-4">
-              <p class="text-[10px] uppercase tracking-widest text-slate-500">Score</p>
-              <p class="text-2xl font-game">{{ gameStore.distance }}</p>
+          <div class="grid grid-cols-2 gap-px bg-white/5 mb-10">
+            <div class="p-6 bg-black/40">
+              <p class="text-[10px] uppercase font-mono tracking-widest text-white/30 mb-2">SCORE_VAL</p>
+              <p class="text-3xl font-mono font-bold text-white">{{ gameStore.distance }}</p>
             </div>
-            <div class="glass-panel p-4">
-              <p class="text-[10px] uppercase tracking-widest text-slate-500">High Score</p>
-              <p class="text-2xl font-game">{{ gameStore.highScore }}</p>
+            <div class="p-6 bg-black/40">
+              <p class="text-[10px] uppercase font-mono tracking-widest text-white/30 mb-2">BEST_VAL</p>
+              <p class="text-3xl font-mono font-bold text-white">{{ gameStore.highScore }}</p>
             </div>
           </div>
 
           <button @click="handleReset" class="btn-squid-primary w-full">
-            Try Again
+            REBOOT_SESSION
           </button>
         </div>
 
         <!-- Victory Modal -->
         <div 
           v-if="gameStore.isVictory" 
-          class="glass-panel p-8 lg:p-12 text-center space-y-6 bg-green-950/40 border-green-500/50 pointer-events-auto"
-          role="dialog"
-          aria-labelledby="victory-title"
+          class="glass-panel p-10 lg:p-14 text-center border-t-2 border-t-squid-teal bg-teal-950/20 pointer-events-auto max-w-lg"
         >
-          <Trophy :size="64" class="text-amber-500 mx-auto animate-bounce" aria-hidden="true" />
+          <div class="inline-block px-3 py-1 bg-squid-teal text-[10px] font-mono font-bold text-white tracking-[0.5em] uppercase mb-8">
+            Survival Protocol Success
+          </div>
           
-          <div class="space-y-2 text-white">
-            <h2 id="victory-title" class="text-4xl lg:text-5xl font-display font-black text-amber-500 uppercase italic">
-              Victory!
+          <div class="space-y-2 mb-10">
+            <h2 class="text-5xl lg:text-6xl font-mono font-bold text-white uppercase italic tracking-tighter">
+              SURVIVED
             </h2>
-            <p class="text-xs font-black uppercase tracking-widest text-green-400">
-              You Survived!
+            <p class="text-xs font-mono font-bold uppercase tracking-[0.3em] text-squid-teal/60">
+              Objective Reached
             </p>
           </div>
 
-          <div class="glass-panel p-6">
-            <p class="text-[10px] uppercase tracking-widest text-slate-500 mb-2">Final Score</p>
-            <p class="text-4xl font-game text-glow-cyan">{{ gameStore.score }}</p>
+          <div class="glass-panel p-8 mb-10 border-none bg-white/5">
+            <p class="text-[10px] uppercase font-mono tracking-widest text-white/30 mb-2">TOTAL_SCORE</p>
+            <p class="text-5xl font-mono font-bold text-white text-glow-teal">{{ gameStore.score }}</p>
           </div>
 
           <button @click="handleReset" class="btn-squid-secondary w-full">
-            Survive Again
+            NEXT_LEVEL
           </button>
         </div>
       </main>
 
       <!-- HUD Bottom -->
-      <footer class="flex justify-between items-end w-full">
-        <div class="flex items-center gap-4 lg:gap-6 text-[8px] lg:text-[10px] font-black uppercase tracking-[0.4em] lg:tracking-[0.5em] text-slate-500">
-          <span>© 2026 Made by MK — Built by Musharraf Kazi</span>
-          <a
-            href="https://github.com/mk-knight23/31-Squid-Game-Web"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hover:text-white transition-colors pointer-events-auto"
-          >
-            GitHub
-          </a>
-        </div>
-
-        <div v-if="gameStore.isPlaying" class="pointer-events-auto">
+      <footer class="flex justify-between items-end w-full mt-auto">
+        <div class="flex flex-col gap-2 text-[10px] font-mono font-bold uppercase tracking-[0.4em] text-white/20">
+          <span>© 2026 SQUID_NET // PROXY_NODE_MK</span>
           <div class="flex items-center gap-4">
-            <!-- Progress Bar -->
-            <div class="w-32 lg:w-48 h-2 bg-white/10 rounded-full overflow-hidden">
+            <span class="text-squid-pink">SECURE_CHANNEL: ACTIVE</span>
+            <span class="text-squid-teal">ENCRYPTION: AES-256</span>
+          </div>
+        </div>
+ 
+        <div v-if="gameStore.isPlaying" class="pointer-events-auto flex flex-col items-end gap-4">
+          <div class="glass-panel px-4 py-2 flex items-center gap-4 border-none bg-white/5">
+            <span class="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">Progress_Map</span>
+            <div class="w-48 h-1 bg-white/10 overflow-hidden">
               <div 
-                class="h-full bg-gradient-to-r from-squid-pink to-squid-cyan transition-all duration-300"
+                class="h-full bg-squid-pink transition-all duration-300"
                 :style="{ width: `${gameStore.progress}%` }"
-                role="progressbar"
-                :aria-valuenow="gameStore.progress"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                aria-label="Distance to finish"
               ></div>
             </div>
-            
-            <button 
-              @click="gameStore.moveForward(10)"
-              class="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-white/10 border-2 border-white/20 active:bg-squid-cyan active:border-white transition-all flex items-center justify-center"
-              aria-label="Move forward"
-            >
-              <Activity :size="24" class="text-white opacity-50" />
-            </button>
+            <span class="text-[10px] font-mono font-bold text-white">{{ Math.round(gameStore.progress) }}%</span>
           </div>
+          
+          <button 
+            @click="gameStore.moveForward(10)"
+            class="group relative w-20 h-20 bg-black border border-white/20 hover:border-squid-pink flex items-center justify-center overflow-hidden"
+          >
+            <div class="absolute inset-0 bg-squid-pink opacity-0 group-active:opacity-20 transition-opacity"></div>
+            <Activity :size="28" class="text-white relative z-10 transition-transform group-hover:scale-110" />
+          </button>
         </div>
       </footer>
 
@@ -391,9 +363,3 @@ const themeIcon = computed(getThemeIcon)
     />
   </div>
 </template>
-
-<!-- V3: Personal Best Display -->
-<div class="personal-best">
-  <span class="label">PERSONAL BEST:</span>
-  <span class="time">{{ formatTime(personalBest) }}</span>
-</div>

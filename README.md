@@ -1,4 +1,4 @@
-# 🦑 Squid Game Web - Red Light Green Light
+# 28-game-squid-net
 
 <p align="center">
   <img src="https://img.shields.io/badge/Vue%203-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue 3">
@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  An immersive 3D web game replicating the iconic "Red Light, Green Light" challenge from Squid Game. Built with Vue 3, TresJS (declarative Three.js), and modern web technologies.
+  A premium, dystopian 3D adaptation of "Red Light, Green Light" built with Vue 3, TresJS, and high-performance WebGL.
 </p>
 
 <p align="center">

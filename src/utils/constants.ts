@@ -10,13 +10,13 @@ export const GAME_CONSTANTS = {
 } as const
 
 export const STORAGE_KEYS = {
-  HIGH_SCORE: 'squid-highscore',
-  HIGH_SCORE_EASY: 'squid-highscore-easy',
-  HIGH_SCORE_MEDIUM: 'squid-highscore-medium',
-  HIGH_SCORE_HARD: 'squid-highscore-hard',
-  SETTINGS: 'squid-settings',
-  STATS: 'squid-stats',
-  WIN_STREAK: 'squid-streak',
+  HIGH_SCORE: 'squid-net-highscore',
+  HIGH_SCORE_EASY: 'squid-net-highscore-easy',
+  HIGH_SCORE_MEDIUM: 'squid-net-highscore-medium',
+  HIGH_SCORE_HARD: 'squid-net-highscore-hard',
+  SETTINGS: 'squid-net-settings',
+  STATS: 'squid-net-stats',
+  WIN_STREAK: 'squid-net-streak',
 } as const
 
 export const KEYBOARD_SHORTCUTS = {

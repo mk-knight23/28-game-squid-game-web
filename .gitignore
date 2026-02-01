@@ -27,3 +27,4 @@ dist-ssr
 _backup
 .DS_Store
 src/.DS_Store
+.vercel

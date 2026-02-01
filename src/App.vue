@@ -7,15 +7,12 @@ import { KEYBOARD_SHORTCUTS } from '@/utils/constants'
 import { TresCanvas } from '@tresjs/core'
 import { OrbitControls, Stars, Sky } from '@tresjs/cientos'
 import {
-  Skull,
   Trophy,
   Timer,
   Activity,
   Settings,
   Moon,
   Sun,
-  HelpCircle,
-  Flame,
 } from 'lucide-vue-next'
 import SettingsPanel from '@/components/ui/SettingsPanel.vue'
 

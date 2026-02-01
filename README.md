@@ -12,8 +12,14 @@
 </p>
 
 <p align="center">
-  <a href="https://mk-knight23.github.io/31-Squid-Game-Web/">🚀 Live Demo</a>
+  <a href="https://two8-game-squid-net.onrender.com">🚀 Live Demo (Render)</a>
 </p>
+
+## 🎮 Live Demos
+
+| Platform | URL |
+|----------|-----|
+| **Render** | [two8-game-squid-net.onrender.com](https://two8-game-squid-net.onrender.com) |
 
 ![Game Screenshot](https://via.placeholder.com/800x450/0a0a0f/ed1b76?text=Squid+Game+Web)
 
